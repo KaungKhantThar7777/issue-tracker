@@ -8,6 +8,11 @@
   box-sizing: inherit;
 }
 
+body {
+  background-color: #010101;
+  color: #ffffff;
+}
+
 .container {
   margin: 0 auto;
   max-width: 1100px;
@@ -211,7 +216,7 @@ form input {
   list-style: none;
   padding: 0;
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 .status-select {

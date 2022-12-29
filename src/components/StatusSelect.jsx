@@ -1,6 +1,6 @@
-const possibleStatus = [
+export const possibleStatus = [
   { id: "backlog", label: "Backlog" },
-  { id: "todo", label: "To-Do" },
+  { id: "todo", label: "To Do" },
   { id: "inProgress", label: "In Progress" },
   { id: "done", label: "Done" },
   { id: "cancelled", label: "Cancelled" },

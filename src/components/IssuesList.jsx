@@ -1,15 +1,18 @@
 import { useQuery } from "react-query";
 import { IssueItem } from "./IssueItem";
 import { useState } from "react";
+import { fetchWithError } from "../helpers/fetchWithError";
 
 export default function IssuesList({ labels, status }) {
   const [searchValue, setSearchValue] = useState("");
   const issuesListQuery = useQuery(["issues", { labels, status }], () => {
     const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
     const statusString = status ? `&status=${status}` : "";
-    return fetch(`/api/issues?${labelsString}${statusString}`).then((res) =>
-      res.json()
-    );
+    return fetchWithError(`/api/issues?${labelsString}${statusString}`, {
+      headers: {
+        "x-error": true,
+      },
+    });
   });
   const searchQuery = useQuery(
     ["issues", "search", searchValue],
@@ -22,8 +25,7 @@ export default function IssuesList({ labels, status }) {
       enabled: !!searchValue,
     }
   );
-
-  console.log(searchQuery, searchValue);
+  console.log(issuesListQuery);
 
   return (
     <div>
@@ -46,8 +48,11 @@ export default function IssuesList({ labels, status }) {
           }}
         />
       </form>
+
       {issuesListQuery.isLoading ? (
         <p className="loading">Loading....</p>
+      ) : issuesListQuery.isError ? (
+        <p>{issuesListQuery.error.message}</p>
       ) : !searchValue ? (
         <ul className="issues-list">
           {issuesListQuery.data.map((issue) => (

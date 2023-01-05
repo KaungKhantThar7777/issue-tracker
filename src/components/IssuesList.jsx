@@ -16,10 +16,10 @@ export default function IssuesList({ labels, status }) {
   });
   const searchQuery = useQuery(
     ["issues", "search", searchValue],
-    async () => {
-      return fetch(`/api/search/issues?q=${searchValue}`).then((res) =>
-        res.json()
-      );
+    async ({ signal }) => {
+      return fetch(`/api/search/issues?q=${searchValue}`, {
+        signal,
+      }).then((res) => res.json());
     },
     {
       enabled: !!searchValue,

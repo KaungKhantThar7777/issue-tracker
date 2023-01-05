@@ -2,18 +2,20 @@ import { useQuery } from "react-query";
 import { IssueItem } from "./IssueItem";
 import { useState } from "react";
 import { fetchWithError } from "../helpers/fetchWithError";
+import Loader from "./Loader";
 
 export default function IssuesList({ labels, status }) {
   const [searchValue, setSearchValue] = useState("");
-  const issuesListQuery = useQuery(["issues", { labels, status }], () => {
-    const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
-    const statusString = status ? `&status=${status}` : "";
-    return fetchWithError(`/api/issues?${labelsString}${statusString}`, {
-      headers: {
-        "x-error": true,
-      },
-    });
-  });
+  const issuesListQuery = useQuery(
+    ["issues", { labels, status }],
+    ({ signal }) => {
+      const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
+      const statusString = status ? `&status=${status}` : "";
+      return fetchWithError(`/api/issues?${labelsString}${statusString}`, {
+        signal,
+      });
+    }
+  );
   const searchQuery = useQuery(
     ["issues", "search", searchValue],
     async ({ signal }) => {
@@ -54,15 +56,18 @@ export default function IssuesList({ labels, status }) {
       ) : issuesListQuery.isError ? (
         <p>{issuesListQuery.error.message}</p>
       ) : !searchValue ? (
-        <ul className="issues-list">
-          {issuesListQuery.data.map((issue) => (
-            <IssueItem
-              key={issue.id}
-              commentCount={issue.comments.length}
-              {...issue}
-            />
-          ))}
-        </ul>
+        <>
+          <h2>Issues List {issuesListQuery.isFetching ? <Loader /> : null}</h2>
+          <ul className="issues-list">
+            {issuesListQuery.data.map((issue) => (
+              <IssueItem
+                key={issue.id}
+                commentCount={issue.comments.length}
+                {...issue}
+              />
+            ))}
+          </ul>
+        </>
       ) : (
         <>
           <h2>Search Results</h2>

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { IssueHeader } from "./IssueHeader";
 import { useUserData } from "../helpers/useUserData";
 import { relativeDate } from "../helpers/relativeDate";
+import IssueStatus from "./IssueStatus";
 
 function useIssueData(issueNumber) {
   return useQuery(["issues", issueNumber], ({ signal }) => {
@@ -66,7 +67,12 @@ export default function IssueDetails() {
                 ))
               )}
             </section>
-            <aside></aside>
+            <aside>
+              <IssueStatus
+                issueNumber={issueQuery.data.number}
+                status={issueQuery.data.status}
+              />
+            </aside>
           </main>
         </>
       )}

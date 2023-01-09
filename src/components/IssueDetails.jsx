@@ -22,7 +22,6 @@ function useIssueComments(issueNumber) {
 
 const Comment = ({ comment, createdBy, createdDate }) => {
   const userQuery = useUserData(createdBy);
-  console.log(userQuery);
   if (userQuery.isLoading)
     return (
       <div className="comment">
@@ -50,7 +49,6 @@ export default function IssueDetails() {
   const { number } = useParams();
   const issueQuery = useIssueData(number);
   const commentsQuery = useIssueComments(number);
-  console.log({ issueQuery, commentsQuery });
   return (
     <div className="issue-details">
       {issueQuery.isLoading ? (

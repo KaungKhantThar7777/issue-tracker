@@ -4,16 +4,17 @@ import { useState } from "react";
 import { fetchWithError } from "../helpers/fetchWithError";
 import Loader from "./Loader";
 
-export default function IssuesList({ labels, status }) {
+export default function IssuesList({ labels, status, pageNum, setPageNum }) {
   const queryClient = useQueryClient();
   const [searchValue, setSearchValue] = useState("");
   const issuesListQuery = useQuery(
-    ["issues", { labels, status }],
+    ["issues", { labels, status, page: pageNum }],
     async ({ signal }) => {
       const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
       const statusString = status ? `&status=${status}` : "";
+      const page = pageNum ? `&page=${pageNum}` : "";
       const results = await fetchWithError(
-        `/api/issues?${labelsString}${statusString}`,
+        `/api/issues?${labelsString}${statusString}${page}`,
         {
           signal,
         }
@@ -24,6 +25,9 @@ export default function IssuesList({ labels, status }) {
       );
 
       return results;
+    },
+    {
+      keepPreviousData: true,
     }
   );
   const searchQuery = useQuery(
@@ -76,6 +80,31 @@ export default function IssuesList({ labels, status }) {
               />
             ))}
           </ul>
+          <div className="pagination">
+            <button
+              disabled={pageNum === 1}
+              onClick={() => setPageNum(pageNum - 1)}
+            >
+              Previous
+            </button>
+            Page {pageNum} {issuesListQuery.isFetching ? "..." : ""}
+            <button
+              disabled={
+                issuesListQuery.data.length === 0 ||
+                issuesListQuery.isPreviousData
+              }
+              onClick={() => {
+                if (
+                  issuesListQuery.data.length > 0 &&
+                  !issuesListQuery.isPreviousData
+                ) {
+                  setPageNum(pageNum + 1);
+                }
+              }}
+            >
+              Next
+            </button>
+          </div>
         </>
       ) : (
         <>

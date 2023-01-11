@@ -7,13 +7,19 @@ import { Link } from "react-router-dom";
 export default function Issues() {
   const [selectedLabels, setSelectedLabels] = useState([]);
   const [status, setStatus] = useState("");
-
+  const [pageNum, setPageNum] = useState(1);
+  console.log(pageNum);
   return (
     <div>
       <main>
         <section>
           <h1>Issues</h1>
-          <IssuesList labels={selectedLabels} status={status} />
+          <IssuesList
+            labels={selectedLabels}
+            status={status}
+            pageNum={pageNum}
+            setPageNum={setPageNum}
+          />
         </section>
         <aside>
           <LabelList

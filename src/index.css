@@ -405,6 +405,8 @@ form input {
 }
 .pagination button {
   width: max-content;
+  background: yellow;
+  color: black;
 }
 .loader {
   animation: spin 1s steps(8) infinite;

@@ -11,7 +11,6 @@ export function IssueAssignment({ assignee, issueNumber }) {
   const usersQuery = useQuery(["users"], () =>
     fetch("/api/users").then((res) => res.json())
   );
-  console.log({ usersQuery });
   const setAssignee = useMutation(
     (assignee) =>
       fetch(`/api/issues/${issueNumber}`, {

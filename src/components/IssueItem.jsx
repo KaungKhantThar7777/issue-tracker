@@ -22,10 +22,12 @@ export const IssueItem = ({
   return (
     <li
       onMouseEnter={() => {
-        queryClient.prefetchQuery({
+        queryClient.prefetchInfiniteQuery({
           queryKey: ["issues", number.toString(), "comments"],
           queryFn: () =>
-            fetch(`/api/issues/${number}/comments`).then((res) => res.json()),
+            fetch(`/api/issues/${number}/comments?page=1`).then((res) =>
+              res.json()
+            ),
         });
       }}
     >
